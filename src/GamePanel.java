@@ -20,9 +20,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Font titleFont;
 	Font otherFont;
 	
+	ObjectManager objMan;
+	
 	Timer frameDraw;
 	
 	Rocketship player;
+	
+	boolean up = false;
+	boolean down = false;
+	boolean left = false;
+	boolean right = false;
 	
 	public GamePanel() {
 		 titleFont = new Font("Arial", Font.PLAIN, 48);
@@ -31,13 +38,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 frameDraw.start();
 		 
 		 player = new Rocketship(250,700,50,50);
+		 objMan = new ObjectManager(player);
 	}
 	
 	 public void updateMenuState(){  
 		 
 	 }
 	 public void updateGameState(){  
-		 
+		 objMan.update();
 	 }
 	 public void updateEndState(){ 
 		 
@@ -59,7 +67,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 
 		 
 		 
-		 player.draw(g);
+		 objMan.draw(g);
 		 
 	 }
 	 public void drawEndState(Graphics g) {
@@ -105,6 +113,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
+		if(up)
+					player.up();
+		if(down)
+					player.down();
+		if(left)
+					player.left();
+		if(right)
+					player.right();
 		if (arg0.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == END) {
 		        currentState = MENU;
@@ -114,23 +130,38 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}  
 		//Make boolean switches in keyPressed() and keyReleased(), which then triggers the methods on or off.
 		if (arg0.getKeyCode()==KeyEvent.VK_UP) {
-		    player.up();
+			up = true;
+				
 		}
 		if (arg0.getKeyCode()==KeyEvent.VK_DOWN) {
-		    player.down();
+			down = true;
+				
 		}
 		if (arg0.getKeyCode()==KeyEvent.VK_LEFT) {
-		    player.left();
+			left = true;
+				
 		}
 		if (arg0.getKeyCode()==KeyEvent.VK_RIGHT) {
-		    player.right();
+			right = true;
+				
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		if (arg0.getKeyCode()==KeyEvent.VK_UP) {
+			up = false;
+		}
+		if (arg0.getKeyCode()==KeyEvent.VK_DOWN) {
+			down = false;
+		}
+		if (arg0.getKeyCode()==KeyEvent.VK_LEFT) {
+			left = false;
+		}
+		if (arg0.getKeyCode()==KeyEvent.VK_RIGHT) {
+			right = false;
+		}
 	}
 
 	@Override

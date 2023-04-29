@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -23,6 +25,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	ObjectManager objMan;
 	
 	Timer frameDraw;
+	Timer alienSpawn;
 	
 	Rocketship player;
 	
@@ -30,6 +33,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	boolean down = false;
 	boolean left = false;
 	boolean right = false;
+	
+	public static BufferedImage image;
+	public static boolean needImage = true;
+	public static boolean gotImage = false;	
 	
 	public GamePanel() {
 		 titleFont = new Font("Arial", Font.PLAIN, 48);
@@ -39,6 +46,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 
 		 player = new Rocketship(250,700,50,50);
 		 objMan = new ObjectManager(player);
+		 
+		 if (needImage) {
+			    loadImage ("space.png");
+		}
+	}
+	public void startGame() {
+		   alienSpawn = new Timer(1000 , objMan);
+		    alienSpawn.start();
 	}
 	
 	 public void updateMenuState(){  
@@ -62,8 +77,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 g.drawString("Press SPACE for instructions", 105, 475);
 	 }
 	 public void drawGameState(Graphics g){
-		 g.setColor(Color.BLACK);
-		 g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+		
+		 if (gotImage) {
+				g.drawImage(image, 0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT, null);
+			} else {
+				 g.setColor(Color.BLACK);
+				 g.fillRect(0, 0, LeagueInvaders.WIDTH, LeagueInvaders.HEIGHT);
+			}
 		 
 		 
 		 
@@ -121,11 +141,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 					player.left();
 		if(right)
 					player.right();
+		
 		if (arg0.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == END) {
 		        currentState = MENU;
-		    } else {
+		    } else if(currentState == MENU){
+		    	startGame();
 		        currentState++;
+		    }else {
+		    	alienSpawn.stop();
+		    	currentState++;
 		    }
 		}  
 		//Make boolean switches in keyPressed() and keyReleased(), which then triggers the methods on or off.
@@ -143,6 +168,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		if (arg0.getKeyCode()==KeyEvent.VK_RIGHT) {
 			right = true;
+				
+		}
+		if (arg0.getKeyCode()==KeyEvent.VK_SPACE) {
+			objMan.addProjectile(player.getProjectile());
 				
 		}
 	}
@@ -168,5 +197,16 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	void loadImage(String imageFile) {
+	    if (needImage) {
+	        try {
+	            image = ImageIO.read(this.getClass().getResourceAsStream(imageFile));
+		    gotImage = true;
+	        } catch (Exception e) {
+	            
+	        }
+	        needImage = false;
+	    }
 	}
 }

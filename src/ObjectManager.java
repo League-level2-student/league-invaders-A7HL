@@ -22,11 +22,8 @@ public class ObjectManager implements ActionListener {
 		aliens.add(new Alien(random.nextInt(LeagueInvaders.WIDTH),0,50,50));
 	}
 	public void update() {
-		checkCollision();
-		purgeObjects();
-		if(rocket.isActive == false) {
-			//GamePanel.currentState = END;
-		}
+		
+		
 		for(Alien a:aliens) {
 			a.update();
 			if(a.y>LeagueInvaders.HEIGHT) {
@@ -39,6 +36,9 @@ public class ObjectManager implements ActionListener {
 				p.isActive = false;
 			}
 		}
+		checkCollision();
+		purgeObjects();
+		
 	}
 	public void draw(Graphics g) {
 		rocket.draw(g);
@@ -53,6 +53,8 @@ public class ObjectManager implements ActionListener {
 		for(Alien a:aliens) {
 			if(rocket.collisionBox.intersects(a.collisionBox)) {
 				rocket.isActive = false;
+				//a.isActive = false;
+				System.out.println("Rocket collided w/ alien");
 				break;
 			}
 			for(Projectile p: projectiles) {

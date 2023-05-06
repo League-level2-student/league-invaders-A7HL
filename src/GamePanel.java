@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public void startGame() {
 		   alienSpawn = new Timer(1000 , objMan);
 		    alienSpawn.start();
+		   
 	}
 	
 	 public void updateMenuState(){  
@@ -61,6 +62,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	 }
 	 public void updateGameState(){  
 		 objMan.update();
+		 if(player.isActive == false) {
+				currentState = END;
+		}
+		 
+		 
 	 }
 	 public void updateEndState(){ 
 		 
@@ -124,8 +130,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}else if(currentState == END){
 		    updateEndState();
 		}
-		//System.out.println("ACTION");
-		//IDK aboot this part
+		
 		repaint();
 
 	}
@@ -144,9 +149,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		
 		if (arg0.getKeyCode()==KeyEvent.VK_ENTER) {
 		    if (currentState == END) {
+		    	player = new Rocketship(250,700,50,50);
+		    	objMan = new ObjectManager(player);
 		        currentState = MENU;
 		    } else if(currentState == MENU){
 		    	startGame();
+		  
 		        currentState++;
 		    }else {
 		    	alienSpawn.stop();

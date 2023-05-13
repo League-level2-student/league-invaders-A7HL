@@ -38,6 +38,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	public static boolean needImage = true;
 	public static boolean gotImage = false;	
 	
+	boolean shoot = true;
+	
 	public GamePanel() {
 		 titleFont = new Font("Arial", Font.PLAIN, 48);
 		 otherFont = new Font("Arial",Font.PLAIN,24);
@@ -103,7 +105,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		 g.setColor(Color.YELLOW);
 		 g.drawString("GAME OVER",115, 100);
 		 g.setFont(otherFont);
-		 g.drawString("You killed enemies",147,350);
+		 g.drawString("You killed "+objMan.getScore()+ " enemies",147,350);
 		 g.drawString("Press ENTER to restart", 135, 475);
 		 
 	 }
@@ -178,8 +180,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			right = true;
 				
 		}
-		if (arg0.getKeyCode()==KeyEvent.VK_SPACE) {
+		if (shoot == true && arg0.getKeyCode()==KeyEvent.VK_SPACE) {
 			objMan.addProjectile(player.getProjectile());
+			shoot = false;
 				
 		}
 	}
@@ -198,6 +201,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		if (arg0.getKeyCode()==KeyEvent.VK_RIGHT) {
 			right = false;
+		}
+		if (arg0.getKeyCode()==KeyEvent.VK_SPACE) {
+			shoot = true;
 		}
 	}
 
